@@ -15,31 +15,37 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      actions: write
       contents: read
 
     steps:
       - name: Trigger tester repository smoke test workflow
         env:
-          GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN }}
-          TESTER_OWNER: ${{ secrets.SMOKE_TEST_REPO_OWNER || 'DarshanAherkar' }}
-          TESTER_REPO: ${{ secrets.SMOKE_TEST_REPO_NAME || 'AI-Testing' }}
-          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE || 'tester-smoke-tests.yml' }}
-          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || 'main' }}
+          GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN || github.token }}
+          TESTER_OWNER: ${{ secrets.SMOKE_TEST_REPO_OWNER || github.repository_owner }}
+          TESTER_REPO: ${{ secrets.SMOKE_TEST_REPO_NAME || github.event.repository.name }}
+          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE || 'pr-smoke-test-trigger.yml' }}
+          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || github.ref_name }}
         run: |
           set -euo pipefail
-
-          if [ -z "${GH_TOKEN}" ]; then
-            echo "::error::Missing required GitHub Actions secret: SMOKE_TEST_REPO_TOKEN"
-            exit 1
-          fi
 
           REF_NAME="${TESTER_REF}"
 
           echo "Triggering smoke tests in ${TESTER_OWNER}/${TESTER_REPO} on ref ${REF_NAME}"
+          echo "Debug: workflow file = ${TESTER_WORKFLOW}"
+
+          gh api \
+            "/repos/${TESTER_OWNER}/${TESTER_REPO}/actions/workflows/${TESTER_WORKFLOW}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" || {
+              echo "::error::Workflow not found at ${TESTER_OWNER}/${TESTER_REPO}/actions/workflows/${TESTER_WORKFLOW}"
+              exit 1
+            }
 
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
             "/repos/${TESTER_OWNER}/${TESTER_REPO}/actions/workflows/${TESTER_WORKFLOW}/dispatches" \
             -f "ref=${REF_NAME}" \
             -f "inputs[pr_number]=${{ github.event.pull_request.number }}" \
