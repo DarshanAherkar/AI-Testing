@@ -1,6 +1,7 @@
 name: Trigger Smoke Tests on PR
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
@@ -22,17 +23,17 @@ jobs:
           GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN }}
           TESTER_OWNER: ${{ secrets.SMOKE_TEST_REPO_OWNER || 'DarshanAherkar' }}
           TESTER_REPO: ${{ secrets.SMOKE_TEST_REPO_NAME || 'AI-Testing' }}
-          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE }}
-          TESTER_REF: ${{ secrets.SMOKE_TEST_REF }}
+          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE || 'tester-smoke-tests.yml' }}
+          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || 'main' }}
         run: |
           set -euo pipefail
 
-          if [ -z "${GH_TOKEN}" ] || [ -z "${TESTER_OWNER}" ] || [ -z "${TESTER_REPO}" ] || [ -z "${TESTER_WORKFLOW}" ]; then
-            echo "::error::Missing required GitHub Actions secrets: SMOKE_TEST_REPO_TOKEN, SMOKE_TEST_REPO_OWNER, SMOKE_TEST_REPO_NAME, SMOKE_TEST_WORKFLOW_FILE"
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::Missing required GitHub Actions secret: SMOKE_TEST_REPO_TOKEN"
             exit 1
           fi
 
-          REF_NAME="${TESTER_REF:-main}"
+          REF_NAME="${TESTER_REF}"
 
           echo "Triggering smoke tests in ${TESTER_OWNER}/${TESTER_REPO} on ref ${REF_NAME}"
 
