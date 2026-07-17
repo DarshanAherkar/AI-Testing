@@ -1,0 +1,48 @@
+name: Trigger Smoke Tests on PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  trigger-smoke-tests:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Trigger tester repository smoke test workflow
+        env:
+          GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN }}
+          TESTER_OWNER: ${{ secrets.SMOKE_TEST_REPO_OWNER || 'DarshanAherkar' }}
+          TESTER_REPO: ${{ secrets.SMOKE_TEST_REPO_NAME || 'AI-Testing' }}
+          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE }}
+          TESTER_REF: ${{ secrets.SMOKE_TEST_REF }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_TOKEN}" ] || [ -z "${TESTER_OWNER}" ] || [ -z "${TESTER_REPO}" ] || [ -z "${TESTER_WORKFLOW}" ]; then
+            echo "::error::Missing required GitHub Actions secrets: SMOKE_TEST_REPO_TOKEN, SMOKE_TEST_REPO_OWNER, SMOKE_TEST_REPO_NAME, SMOKE_TEST_WORKFLOW_FILE"
+            exit 1
+          fi
+
+          REF_NAME="${TESTER_REF:-main}"
+
+          echo "Triggering smoke tests in ${TESTER_OWNER}/${TESTER_REPO} on ref ${REF_NAME}"
+
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${TESTER_OWNER}/${TESTER_REPO}/actions/workflows/${TESTER_WORKFLOW}/dispatches" \
+            -f "ref=${REF_NAME}" \
+            -f "inputs[pr_number]=${{ github.event.pull_request.number }}" \
+            -f "inputs[pr_title]=${{ github.event.pull_request.title }}" \
+            -f "inputs[pr_url]=${{ github.event.pull_request.html_url }}" \
+            -f "inputs[source_repo]=${{ github.repository }}" \
+            -f "inputs[head_sha]=${{ github.event.pull_request.head.sha }}"
