@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Darshan Testing</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="brand-panel">
+        <p class="badge">Darshan Testing</p>
+        <h1>Welcome to your testing portal</h1>
+        <p>
+          Access your dashboard, manage tests, and start your next session in a
+          secure place.
+        </p>
+      </div>
+
+      <div class="auth-card">
+        <div class="tab-buttons">
+          <button class="tab active" data-form="login">Login</button>
+          <button class="tab" data-form="signup">Sign Up</button>
+        </div>
+
+        <form id="loginForm" class="auth-form active">
+          <h2>Login</h2>
+          <label>
+            Email
+            <input type="email" placeholder="Enter your email" required />
+          </label>
+          <label>
+            Password
+            <input type="password" placeholder="Enter your password" required />
+          </label>
+          <button type="submit">Login</button>
+        </form>
+
+        <form id="signupForm" class="auth-form">
+          <h2>Create Account</h2>
+          <label>
+            Full Name
+            <input type="text" placeholder="Enter your name" required />
+          </label>
+          <label>
+            Email
+            <input type="email" placeholder="Enter your email" required />
+          </label>
+          <label>
+            Password
+            <input type="password" placeholder="Create password" required />
+          </label>
+          <button type="submit">Sign Up</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
