@@ -25,7 +25,7 @@ jobs:
           TESTER_OWNER: ${{ github.repository_owner }}
           TESTER_REPO: ${{ github.event.repository.name }}
           TESTER_WORKFLOW: pr-smoke-test-trigger.yml
-          TESTER_REF: ${{ github.ref_name }}
+          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || github.event.pull_request.base.ref || 'main' }}
         run: |
           set -euo pipefail
 
