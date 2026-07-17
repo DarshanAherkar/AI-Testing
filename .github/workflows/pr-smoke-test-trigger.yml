@@ -22,10 +22,10 @@ jobs:
       - name: Trigger tester repository smoke test workflow
         env:
           GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN || github.token }}
-          TESTER_OWNER: ${{ secrets.SMOKE_TEST_REPO_OWNER || github.repository_owner }}
-          TESTER_REPO: ${{ secrets.SMOKE_TEST_REPO_NAME || github.event.repository.name }}
-          TESTER_WORKFLOW: ${{ secrets.SMOKE_TEST_WORKFLOW_FILE || 'pr-smoke-test-trigger.yml' }}
-          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || github.ref_name }}
+          TESTER_OWNER: ${{ github.repository_owner }}
+          TESTER_REPO: ${{ github.event.repository.name }}
+          TESTER_WORKFLOW: pr-smoke-test-trigger.yml
+          TESTER_REF: ${{ github.ref_name }}
         run: |
           set -euo pipefail
 
