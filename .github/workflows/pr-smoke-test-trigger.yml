@@ -23,9 +23,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SMOKE_TEST_REPO_TOKEN || github.token }}
           TESTER_OWNER: ${{ github.repository_owner }}
-          TESTER_REPO: ${{ github.event.repository.name }}
-          TESTER_WORKFLOW: pr-smoke-test-trigger.yml
-          TESTER_REF: ${{ secrets.SMOKE_TEST_REF || github.event.pull_request.head.ref || github.ref_name }}
+          TESTER_REPO: AI-Playwright
+          TESTER_WORKFLOW: tester-smoke-tests.yml
+          TESTER_REF: master
         run: |
           set -euo pipefail
 
