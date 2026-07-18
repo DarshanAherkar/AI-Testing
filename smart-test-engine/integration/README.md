@@ -27,3 +27,12 @@ Each selected test includes:
 
 ## What to copy into the tester repo
 Copy the workflow file into `.github/workflows/tester-smoke-tests.yml` in the tester repository.
+
+## Optional source repository access
+If the source repository is private or the PR files API is rate-limited, pass a read-only token into the tester workflow as a secret and use it when fetching PR file lists.
+
+Recommended secret name:
+- `SOURCE_REPO_TOKEN`
+
+Recommended usage:
+- add `Authorization: Bearer <token>` when calling `GET /repos/{source_repo}/pulls/{pr_number}/files`
