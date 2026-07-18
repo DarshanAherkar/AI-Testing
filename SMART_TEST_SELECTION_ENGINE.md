@@ -138,3 +138,13 @@ The repository now includes a dedicated Python scaffold under `smart-test-engine
 - a GitHub Actions workflow configured for `runs-on: self-hosted`
 
 This scaffold is the starting point for the Smart Test Selection and Prioritisation Engine implementation.
+
+## Tester repo wiring
+The tester repository owns and maintains `.github/workflows/tester-smoke-tests.yml` directly.
+
+That workflow consumes the engine's `execution_plan` output and executes the collected `execution_targets` for:
+- `must_run`
+- `high_priority`
+- `optional`
+
+This keeps the tester repo workflow dynamic instead of relying on a static hardcoded test list.

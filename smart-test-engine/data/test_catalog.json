@@ -1,0 +1,46 @@
+[
+  {
+    "test_id": "login-page",
+    "name": "Login page smoke test",
+    "module": "login",
+    "execution_targets": ["tests/login.spec.js"],
+    "tags": ["smoke", "auth", "risk"],
+    "runtime_seconds": 40,
+    "flakiness_score": 0.06,
+    "last_result": "passed",
+    "coverage_targets": ["login", "login.html", "authentication", "signin"]
+  },
+  {
+    "test_id": "signup-page",
+    "name": "Sign up page smoke test",
+    "module": "signup",
+    "execution_targets": ["tests/signup.spec.js"],
+    "tags": ["smoke", "auth"],
+    "runtime_seconds": 42,
+    "flakiness_score": 0.05,
+    "last_result": "passed",
+    "coverage_targets": ["signup", "sign up", "signup.html", "register", "create account"]
+  },
+  {
+    "test_id": "contact-page",
+    "name": "Contact us page smoke test",
+    "module": "contact",
+    "execution_targets": ["tests/contact.spec.js"],
+    "tags": ["smoke", "support"],
+    "runtime_seconds": 35,
+    "flakiness_score": 0.04,
+    "last_result": "passed",
+    "coverage_targets": ["contact", "contact us", "contact.html", "message", "support"]
+  },
+  {
+    "test_id": "about-page",
+    "name": "About us page smoke test",
+    "module": "about",
+    "execution_targets": ["tests/about.spec.js"],
+    "tags": ["smoke", "content"],
+    "runtime_seconds": 25,
+    "flakiness_score": 0.03,
+    "last_result": "passed",
+    "coverage_targets": ["about", "about us", "about.html", "company", "info"]
+  }
+]

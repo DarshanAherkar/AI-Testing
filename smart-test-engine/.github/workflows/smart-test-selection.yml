@@ -10,6 +10,10 @@ jobs:
   run-engine:
     runs-on: self-hosted
 
+    permissions:
+      contents: read
+      pull-requests: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r smart-test-engine/requirements.txt
 
-      - name: Start engine API
+      - name: Run smart test selection
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PYTHONPATH: smart-test-engine/src
         run: |
-          uvicorn engine.api:app --app-dir smart-test-engine/src --host 0.0.0.0 --port 8000
+          python -m engine.run_from_event

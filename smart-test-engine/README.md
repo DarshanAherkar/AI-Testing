@@ -14,7 +14,7 @@ This project scaffolds an ML + RAG + LLM engine for selecting and prioritising t
 3. Retrieve similar PRs and evidence with FAISS
 4. Rank candidate tests with scikit-learn
 5. Ask Ollama (Llama 3.1) for explanation and refinement
-6. Return prioritized tests with rationale
+6. Return a prioritized execution plan with rationale and runnable targets
 
 ## Local setup
 ```bash
@@ -44,3 +44,6 @@ Use a local self-hosted runner for workflow execution. The runner should live on
 - Train the ranking model
 - Wire FAISS retrieval into the scoring API
 - Add a GitHub Actions workflow targeting `runs-on: self-hosted`
+
+## Tester repo integration
+See `smart-test-engine/integration/tester-smoke-tests.yml` for a template that the tester repository can copy into `.github/workflows/tester-smoke-tests.yml`.
