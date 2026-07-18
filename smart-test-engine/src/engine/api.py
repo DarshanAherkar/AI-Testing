@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 
 from .config import EngineConfig
 from .models import PullRequestChange, TestCaseRecord
+from .plan import build_execution_plan
 from .service import SmartTestSelectionEngine
 
 app = FastAPI(title="Smart Test Selection Engine")
@@ -31,15 +32,4 @@ def prioritize(request: PrioritizeRequest):
     if tests:
         engine.build_index(tests)
     prioritized = engine.prioritize(change, tests)
-    return {
-        "tests": [
-            {
-                "test_id": item.test.test_id,
-                "name": item.test.name,
-                "ml_score": item.ml_score,
-                "retrieval_score": item.retrieval_score,
-                "rationale": item.llm_rationale,
-            }
-            for item in prioritized
-        ]
-    }
+    return build_execution_plan(prioritized)

@@ -7,6 +7,7 @@ class TestCaseRecord:
     test_id: str
     name: str
     module: str
+    execution_targets: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
     runtime_seconds: float = 0.0
     flakiness_score: float = 0.0

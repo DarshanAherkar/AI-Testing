@@ -7,6 +7,7 @@ from pathlib import Path
 from .catalog import TestCatalog
 from .config import EngineConfig
 from .models import PullRequestChange
+from .plan import build_execution_plan
 from .service import SmartTestSelectionEngine
 
 
@@ -47,16 +48,7 @@ def run_selection(
     ranked = engine.prioritize(change, catalog)
     output = {
         "pr_number": pr_number,
-        "tests": [
-            {
-                "test_id": item.test.test_id,
-                "name": item.test.name,
-                "ml_score": item.ml_score,
-                "retrieval_score": item.retrieval_score,
-                "rationale": item.llm_rationale,
-            }
-            for item in ranked
-        ],
+        "execution_plan": build_execution_plan(ranked),
     }
     Path(output_path).write_text(json.dumps(output, indent=2), encoding="utf-8")
     return output
