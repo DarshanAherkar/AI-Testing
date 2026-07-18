@@ -26,6 +26,25 @@ class TestRanker:
             "diff_length": len(change.diff_text),
         }
 
+    def _fallback_score(self, change: PullRequestChange, test: TestCaseRecord) -> float:
+        joined_files = " ".join(change.changed_files).lower()
+        joined_text = f"{change.title} {change.description} {change.diff_text}".lower()
+        module = test.module.lower()
+
+        module_overlap = int(module in joined_files or module in joined_text)
+        coverage_overlap = sum(
+            1
+            for target in test.coverage_targets
+            if target.lower() in joined_files or target.lower() in joined_text
+        )
+
+        score = 0.1
+        score += 0.55 if module_overlap else 0.0
+        score += min(0.25, 0.08 * coverage_overlap)
+        score += 0.05 if test.last_result == "failed" else 0.0
+        score += 0.05 if "risk" in test.tags else 0.0
+        return min(score, 0.99)
+
     def train(self, changes: list[PullRequestChange], tests: list[TestCaseRecord], labels: list[int]) -> None:
         feature_rows = []
         for change, test in zip(changes, tests, strict=False):
@@ -35,7 +54,15 @@ class TestRanker:
 
     def score(self, change: PullRequestChange, tests: list[TestCaseRecord]) -> list[RankedTest]:
         if not self.is_trained:
-            return [RankedTest(test=test, ml_score=0.0, retrieval_score=0.0) for test in tests]
+            fallback_ranked = [
+                RankedTest(
+                    test=test,
+                    ml_score=self._fallback_score(change, test),
+                    retrieval_score=0.0,
+                )
+                for test in tests
+            ]
+            return sorted(fallback_ranked, key=lambda item: item.ml_score, reverse=True)
         feature_rows = [self._features(change, test) for test in tests]
         probabilities = self.pipeline.predict_proba(feature_rows)[:, 1]
         ranked = [RankedTest(test=test, ml_score=float(score), retrieval_score=0.0) for test, score in zip(tests, probabilities, strict=False)]

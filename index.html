@@ -10,51 +10,27 @@
     <div class="container">
       <div class="brand-panel">
         <p class="badge">Darshan Testing</p>
-        <h1>Welcome to your testing portal</h1>
+        <h1>Smart Test Demo Portal</h1>
         <p>
-          Access your dashboard, manage tests, and start your next session in a
-          secure place.
+          Open a specific feature page and use it as a change target for smart
+          test selection. Each page maps to a related test case.
         </p>
       </div>
 
-      <div class="auth-card">
-        <div class="tab-buttons">
-          <button class="tab active" data-form="login">Login</button>
-          <button class="tab" data-form="signup">Sign Up</button>
+      <div class="menu-card">
+        <h2>Open Feature Page</h2>
+        <p class="menu-note">
+          Choose one page. If a developer changes that page, the engine should
+          prioritize its related test case.
+        </p>
+
+        <div class="nav-grid">
+          <a class="nav-link" href="login.html">Login</a>
+          <a class="nav-link" href="signup.html">Sign Up</a>
+          <a class="nav-link" href="contact.html">Contact Us</a>
+          <a class="nav-link" href="about.html">About Us</a>
         </div>
-
-        <form id="loginForm" class="auth-form active">
-          <h2>Login</h2>
-          <label>
-            Email
-            <input type="email" placeholder="Enter your email" required />
-          </label>
-          <label>
-            Password
-            <input type="password" placeholder="Enter your password" required />
-          </label>
-          <button type="submit">LogIn</button>
-        </form>
-
-        <form id="signupForm" class="auth-form">
-          <h2>Create Account</h2>
-          <label>
-            Full Name
-            <input type="text" placeholder="Enter your name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" placeholder="Enter your email" required />
-          </label>
-          <label>
-            Password
-            <input type="password" placeholder="Create password" required />
-          </label>
-          <button type="submit">Sign Up</button>
-        </form>
       </div>
     </div>
-
-    <script src="script.js"></script>
   </body>
 </html>

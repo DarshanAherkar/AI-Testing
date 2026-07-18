@@ -7,15 +7,17 @@ from .models import RankedTest
 
 def _priority_bucket(item: RankedTest) -> str:
     score = max(item.ml_score, item.retrieval_score)
-    if "risk" in item.test.tags or item.test.last_result == "failed" or score >= 0.75:
+    if item.test.last_result == "failed" or score >= 0.75 or ("risk" in item.test.tags and score >= 0.35):
         return "must_run"
-    if score >= 0.45 or item.test.flakiness_score >= 0.1:
+    if score >= 0.45 or (item.test.flakiness_score >= 0.1 and score >= 0.30):
         return "high_priority"
-    return "optional"
+    if score >= 0.20:
+        return "optional"
+    return "skipped"
 
 
 def build_execution_plan(ranked_tests: list[RankedTest]) -> dict:
-    plan = {"must_run": [], "high_priority": [], "optional": []}
+    plan = {"must_run": [], "high_priority": [], "optional": [], "skipped": []}
     for item in ranked_tests:
         bucket = _priority_bucket(item)
         plan[bucket].append(
