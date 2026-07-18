@@ -1,0 +1,32 @@
+[
+  {
+    "test_id": "auth-login",
+    "name": "Login flow smoke test",
+    "module": "auth",
+    "tags": ["smoke", "risk"],
+    "runtime_seconds": 45,
+    "flakiness_score": 0.12,
+    "last_result": "passed",
+    "coverage_targets": ["login", "session", "token"]
+  },
+  {
+    "test_id": "checkout-flow",
+    "name": "Checkout flow smoke test",
+    "module": "checkout",
+    "tags": ["smoke", "risk"],
+    "runtime_seconds": 90,
+    "flakiness_score": 0.18,
+    "last_result": "failed",
+    "coverage_targets": ["cart", "payment", "order"]
+  },
+  {
+    "test_id": "profile-settings",
+    "name": "Profile settings regression",
+    "module": "profile",
+    "tags": ["regression"],
+    "runtime_seconds": 70,
+    "flakiness_score": 0.05,
+    "last_result": "passed",
+    "coverage_targets": ["profile", "settings"]
+  }
+]
